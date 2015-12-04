@@ -1,2 +1,4 @@
 Debug/
 *.cproj
+.idea/
+CMakeLists.txt

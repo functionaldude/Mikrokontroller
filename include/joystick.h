@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "util/delay.h"
-#include "avr/io.h"
+#include <util/delay.h>
+#include <avr/io.h>
 #include "adc.h"
 
 typedef struct {

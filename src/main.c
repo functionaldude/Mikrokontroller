@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include <avr/io.h>
 #include <util/delay.h>
-#include "dev/uart.h"
-#include "dev/io.h"
-#include "dev/joystick.h"
-#include "dev/servo.h"
+#include "../include/uart.h"
+#include "../include/joystick.h"
+#include "../include/servo.h"
+#include "../include/io.h"
 
 int main(void) {
 
