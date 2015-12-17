@@ -9,10 +9,12 @@
 #ifndef SERVO_H_
 #define SERVO_H_
 #include <stdint.h>
+#include "joy2servo.h"
 
 void servo_init();
-void servo_left(int16_t);
-void servo_right(int16_t);
+void servo_go(ServoVector);
+
+volatile int8_t coll;
 
 
 

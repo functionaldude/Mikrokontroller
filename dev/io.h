@@ -14,7 +14,7 @@
 #define RED (1 << PE5)
 #define YELLOW (1 << PE3)
 
-#define PUSH (PINF & (1<<PF2))
+#define PUSH (PINB & (1<<PB5))
 #define TILT !(PINF & (1<<PF3))
 
 #define SERVO_LEFT OCR2B

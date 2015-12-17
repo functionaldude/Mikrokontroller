@@ -6,11 +6,50 @@
 #include "dev/io.h"
 #include "dev/joystick.h"
 #include "dev/servo.h"
+#include "dev/joy2servo.h"
+#include <avr/interrupt.h>
+
+volatile JoystickVector j_state;
+
+void blinker_init(){
+	cli();
+	TCCR1A = 0;
+	TCCR1B |= (1<<CS11) | (1<<CS10);
+	TIMSK1 |= (1<<OCIE1A);
+
+	TCNT1H = 0x00;
+	TCNT1L = 0x01;
+	sei();
+}
+
+void init_push_interrupt(){
+	cli();
+	PCICR |= (1<<PCIE0);
+	PCMSK0 |= (1<<PCINT5);
+	sei();
+}
+
+ISR(TIMER1_COMPA_vect){
+	//PORTE |= RED;
+	if(j_state.X > 50){
+		PINE |= YELLOW;
+	} else if(j_state.X < -50){
+		PINE |= RED;
+	} else {
+		PORTE &= ~(RED | YELLOW);
+	}
+}
+
+ISR(PCINT0_vect){
+	//PORTE |= RED;
+	coll = 1;
+}
+
 
 int main(void) {
-
-
+	
 	uart_init(9600);
+
 	
 	DDRE = (1<<PE3) | (1<<PE5);
 	DDRF &= ~((1<<PF3) | (1<<PF2));
@@ -19,18 +58,16 @@ int main(void) {
 	DDRB |= (1<<PB4);
 	DDRH |= (1<<PH6);
 	
-	extreme_raws.high_x_high_y.X = 1011;
-	extreme_raws.high_x_high_y.Y = 902;
-	extreme_raws.low_x_low_y.X = 8;
-	extreme_raws.low_x_low_y.Y = 8;
-	extreme_raws.idle.X = 512;
-	extreme_raws.idle.Y = 508;
+
+	blinker_init();
+	init_push_interrupt();
 	
-	joystick_init_asm();
+	joystick_init();
 	servo_init();
 	
 	
 	while(1) {
+		/*
 		if (!PUSH && !TILT) {
 			PORTE |= RED | YELLOW;
 			_delay_ms(50);
@@ -56,11 +93,12 @@ int main(void) {
 			PORTE |= RED;
 			_delay_ms(500);
 		}
+		*/
 		
-		JoystickVector vals = joystick_status_asm();
-		printf("x: %d, y: %d\n",vals.X, vals.Y);
-		servo_left(vals.Y);
-		servo_right(vals.Y);
+		j_state = joystick_status();
+		printf("x: %d, y: %d\n",j_state.X, j_state.Y);
+		ServoVector s_vector = computeServo(j_state);
+		servo_go(s_vector);
 		
 	}
 

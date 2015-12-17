@@ -11,6 +11,7 @@
 #include "io.h"
 #include <util/delay.h>
 #include <stdio.h>
+#include "joy2servo.h"
 
 #define START_L 24
 #define START_R 23
@@ -67,4 +68,16 @@ void servo_right(int16_t in){
 			_delay_ms(DELAY);
 		}
 	}
+}
+
+void servo_go(ServoVector in){
+	if(in.left == 0 && in.right == 0){
+		coll = 0;
+	}
+	if (coll){
+		in.left = 0;
+		in.right = 0;
+	}
+	servo_left(in.left);
+	servo_right(in.right);
 }

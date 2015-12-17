@@ -39,8 +39,8 @@ void joystick_init() {
 	//extreme_raws.idle.X = adc_get(0);
 	//extreme_raws.idle.Y = adc_get(1);
 	
-	extreme_raws.idle.X = adc_get_asm(0);
-	extreme_raws.idle.Y = adc_get_asm(1);
+	extreme_raws.idle.X = adc_get(0);
+	extreme_raws.idle.Y = adc_get(1);
 	
 	printf("cal complete\n");
 	printf("high:\n");
